@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:movie_app/controllers/movie_controller.dart';
 import 'package:movie_app/models/movies_model.dart';
 import 'package:movie_app/repositories/movies_repository_imp.dart';
@@ -26,7 +27,25 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 40.0,),
-              Text('Movies', style: Theme.of(context).textTheme.headline3,),
+             ValueListenableBuilder<Movies?>(
+                valueListenable: _controller.movies,
+                builder: (_, movies, __) {
+                  return Visibility(
+                    visible: movies != null ,
+                    child: Column(
+                      children: [
+                        Text('Movies',
+                         style: Theme.of(context).textTheme.headline3,
+                        ),
+                        SizedBox(height: 20.0,),
+                        TextField(
+                          onChanged: _controller.onChanged,
+                        )
+                      ],
+                    ),
+                  );
+                }
+              ),
               ValueListenableBuilder<Movies?>(
                 valueListenable: _controller.movies,
                 builder: (_, movies, __) {
@@ -38,7 +57,7 @@ class _HomePageState extends State<HomePage> {
                           itemBuilder: (_, idx) => CustomListCardWidget(movie: movies.listMovies[idx]),
                           
                            separatorBuilder: (_,__) => Divider())
-                      : Container();
+                      : Lottie.asset('assets/lottie.json');
                 },
               ),
             ],
